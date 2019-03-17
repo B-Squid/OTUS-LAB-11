@@ -1,0 +1,20 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  vars:
+    ipa_domain: void
+    ipa_server: void
+    ipa_principal: void
+    ipa_pass: void
+  remote_user: root
+  tasks:
+  - name: install freeipa client
+    dnf:
+      name: freeipa-client
+      state: latest
+    notify:
+      - enroll
+  handlers:
+  - name: enroll
+    command: ipa-client-install -d --mkhomedir --no-dns-sshfp -N --domain={{ ipa_domain }} --server={{ ipa_server }} -p={{ ipa_principal }} -w={{ ipa_pass }}
+...
